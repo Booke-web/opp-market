@@ -1,0 +1,81 @@
+<?php 
+
+class Product
+{
+    private $name;
+    private $price;
+
+    public function __construct($names,$price)
+    {
+        $this->name = $names;
+        $this->price = $price;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getPrice()
+    {
+        return $this->price;
+    }
+}
+
+class Basket
+{
+
+    private $products = [];
+
+    public function addProduct($product)
+    {
+        $this->products[] = $product; // Берет отдельный товар и заносит его в массив с товарами.
+    }
+
+    public function getPrice() 
+    {
+        $price = 0;
+        foreach ($this->products as $product) 
+        {
+            $price += $product->getPrice(); //Берет стоимость одного продукта и складывает ее с переменной $price,
+                                            //которая изначально равна 0.Таким образом цикл перебирает весь массив постоянно складывая $price c ценой отдельного продукта.
+                                            //В конечном итоге переменная имеет в себе сумму всех цен товаров.
+            
+        }
+
+        return $price;
+    }
+}
+
+class NumberPriceFormatter
+{
+    public function format($value)
+    {
+        return number_format($value , 2 ,'.', ' ');
+    }
+}
+
+
+function formatterItemPrice($hasPriceItem, $formatter)
+{
+    return $formatter->format($hasPriceItem->getPrice());
+}
+
+$basket  = new Basket();
+ 
+$product1 = new Product("продукт 1",100000.50);
+$product2 = new Product("продукт 2",200);
+
+$basket->addProduct($product1);
+$basket->addProduct($product2);
+
+echo "Первый товар "  . $product1->getName() . " стоит " . formatterItemPrice($product1, new NumberPriceFormatter());
+
+echo "<br>";
+
+echo "Второй товар "  . $product2->getName() . " стоит " . $product2->getPrice();
+
+echo "<br>";
+
+echo "Цена всей корзины " . $basket->getPrice() . " Рублей";
+
